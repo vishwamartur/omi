@@ -288,7 +288,7 @@ void check_button_level(struct k_work *work_item)
             if (inc_count_1 > threshold) 
             {
                 notify_long_tap();
-                play_haptic_milli(50);
+                play_haptic_milli(10);
                 // TODO: FIXME
                 //if(!from_wakeup)
                 //{

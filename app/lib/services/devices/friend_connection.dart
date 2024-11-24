@@ -51,7 +51,7 @@ class FriendDeviceConnection extends DeviceConnection {
       logServiceNotFoundError('Accelerometer', deviceId);
     }
 
-    _buttonService = await getService(buttonDataStreamServiceUuid);
+    _buttonService = await getService(buttonServiceUuid);
     if (_buttonService == null) {
       logServiceNotFoundError('Button', deviceId);
     }

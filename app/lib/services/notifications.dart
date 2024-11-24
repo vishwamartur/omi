@@ -228,7 +228,6 @@ class NotificationUtil {
   /// Use this method to detect when the user taps on a notification or action button
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
-    debugPrint("onActionReceivedMethod called");
     if (receivePort != null) {
       await onActionReceivedMethodImpl(receivedAction);
     } else {

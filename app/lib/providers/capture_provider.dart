@@ -197,6 +197,9 @@ class CaptureProvider extends ChangeNotifier
     try {
       var messages = await sendVoiceMessageServer([file]);
       debugPrint("Command respond: ${messages.map((m) => m.text).join(" | ")}");
+      if (messages.isNotEmpty) {
+        messageProvider?.refreshMessages();
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -208,7 +211,7 @@ class CaptureProvider extends ChangeNotifier
     _bleButtonStream = await _getBleButtonListener(id, onButtonReceived: (List<int> value) {
       if (value.isEmpty) return;
       var buttonState = ByteData.view(Uint8List.fromList(value.sublist(0, 4).reversed.toList()).buffer).getUint32(0);
-      debugPrint("button ${buttonState}");
+      debugPrint("device button ${buttonState}");
 
       // start long press
       if (buttonState == 3) {
@@ -226,7 +229,6 @@ class CaptureProvider extends ChangeNotifier
 
   Future streamAudioToWs(String id, BleAudioCodec codec) async {
     debugPrint('streamAudioToWs in capture_provider');
-    await streamButton(id);
     _bleBytesStream?.cancel();
     _bleBytesStream = await _getBleAudioBytesListener(id, onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
@@ -353,6 +355,7 @@ class CaptureProvider extends ChangeNotifier
 
     // Why is the _recordingDevice null at this point?
     if (_recordingDevice != null) {
+      await streamButton(_recordingDevice!.id);
       await streamAudioToWs(_recordingDevice!.id, codec);
     } else {
       // Is the app in foreground when this happens?
